@@ -1,5 +1,7 @@
 import { Logo } from "./Logo";
 import { Nav } from "./nav/Nav";
+import { IconLinks } from "./nav/components/IconLinks";
+import { NavLinks } from "./nav/components/NavLinks";
 
 export function Header() {
 	return (
@@ -7,7 +9,7 @@ export function Header() {
 			<div className="mx-auto max-w-7xl px-3 sm:px-8">
 				<div className="flex h-16 justify-between gap-4 md:gap-8">
 					<Logo />
-					<Nav />
+					<Nav iconLinks={<IconLinks />} navLinks={<NavLinks />} />
 				</div>
 			</div>
 		</header>

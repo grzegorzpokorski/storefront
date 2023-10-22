@@ -1,26 +1,42 @@
-import { Suspense } from "react";
-import { AccountLink } from "./components/AccountLink";
-import { CartNavItem } from "./components/CartNavItem";
-import { NavLinks } from "./components/NavLinks";
-import { MobileMenu } from "./components/MobileMenu";
+"use client";
 
-export const Nav = () => {
+import type { ReactNode } from "react";
+import clsx from "clsx";
+import ReactFocusLock from "react-focus-lock";
+import { MenuTrigger } from "./components/MenuTrigger";
+import { useNav } from "./useNav";
+
+type Props = {
+	iconLinks: ReactNode;
+	navLinks: ReactNode;
+};
+
+export const Nav = ({ iconLinks, navLinks }: Props) => {
+	const { isOpen, toggleMenu } = useNav();
+
 	return (
 		<nav className="flex w-full gap-4 lg:gap-8" aria-label="Main navigation">
-			<ul className="hidden gap-4 overflow-x-auto whitespace-nowrap md:flex lg:gap-8 lg:px-0">
-				<NavLinks />
-			</ul>
-			<div className="ml-auto flex items-center justify-center whitespace-nowrap">
-				<AccountLink />
-			</div>
-			<div className="flex items-center">
-				<Suspense fallback={<div className="w-6" />}>
-					<CartNavItem />
-				</Suspense>
-			</div>
-			<MobileMenu>
-				<NavLinks />
-			</MobileMenu>
+			<ReactFocusLock
+				className="order-last flex h-full gap-4 md:order-first lg:gap-8"
+				returnFocus
+				disabled={!isOpen}
+			>
+				<ul
+					className={clsx(
+						isOpen
+							? "translate-y-0 opacity-100"
+							: "-translate-y-full opacity-0 md:translate-y-0 md:opacity-100",
+						"duration-300 motion-safe:transition-opacity",
+						"fixed inset-0 z-10 flex h-[100dvh] flex-col overflow-x-auto whitespace-nowrap bg-white px-3 pt-16 sm:px-8 md:relative md:top-auto md:flex md:h-auto md:flex-row md:gap-4 md:bg-transparent md:px-0 md:pt-0 lg:gap-8",
+						"divide-y pb-3 md:pb-0 [&>li]:py-4",
+					)}
+					id="main-menu"
+				>
+					{navLinks}
+				</ul>
+				<MenuTrigger isOpen={isOpen} onClick={toggleMenu} />
+			</ReactFocusLock>
+			{iconLinks}
 		</nav>
 	);
 };
